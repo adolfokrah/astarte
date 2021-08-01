@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:astarte/pages/changePassword.dart';
+import 'package:astarte/pages/delivery.dart';
 import 'package:astarte/pages/editProfile.dart';
 import 'package:astarte/pages/myPosts.dart';
 import 'package:astarte/pages/myReviews.dart';
@@ -41,6 +42,12 @@ class _AccountPageState extends State<AccountPage> {
       'menu_title':"My Post",
       'icon':CupertinoIcons.doc_append,
       'link':'/post',
+      'user_type':'admin'
+    },
+    {
+      'menu_title':"Delivery",
+      'icon':CupertinoIcons.cube_box,
+      'link':'/delivery',
       'user_type':'admin'
     },
     {
@@ -320,6 +327,12 @@ class _AccountPageState extends State<AccountPage> {
                           type: PageTransitionType.rightToLeft,
                           child: UpdateSocialMediaLinks(
                             userDetails: userDetailsState,)));
+                    }
+
+                    if (menu[index]['link'] == '/delivery') {
+                      Navigator.push(context, PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: Delivery()));
                     }
 
                     if (menu[index]['link'] == '/post') {

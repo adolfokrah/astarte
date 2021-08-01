@@ -14,11 +14,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import 'blockedPage.dart';
+import 'delivery.dart';
 import 'notifications.dart';
 
-void main() {
-  runApp(LandingPage());
-}
+// void main() {
+//   runApp(LandingPage());
+// }
 
 class LandingPage extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   var currentTab = 0;
   Config appConfiguration = new Config();
-  var tabs = [Feed(),SearchPage(),Notifications(),AccountPage()];
+  var tabs = [Feed(),SearchPage(),Notifications(),Delivery(),AccountPage()];
 
   var userId  = "0";
   var userDetailsState;
@@ -199,7 +200,7 @@ class _LandingPageState extends State<LandingPage> {
             currentTab = 2;
           });
         }),
-        IconButton(icon: Icon(currentTab == 3 ? CupertinoIcons.person_fill : CupertinoIcons.person), onPressed: () {
+        IconButton(icon: Icon(currentTab == 4 ? CupertinoIcons.person_fill : CupertinoIcons.person), onPressed: () {
 
           if(userId == "0"){
             openLoginPage();
@@ -207,7 +208,7 @@ class _LandingPageState extends State<LandingPage> {
           }
           if(!mounted) return;
           setState(() {
-            currentTab = 3;
+            currentTab = 4;
           });
         }),
       ],
@@ -245,7 +246,7 @@ class _LandingPageState extends State<LandingPage> {
             currentTab = 2;
           });
         }),
-        IconButton(icon: Icon(currentTab == 3 ? CupertinoIcons.person_fill : CupertinoIcons.person,),
+        IconButton(icon: Icon(currentTab == 3 ? CupertinoIcons.cube_box_fill : CupertinoIcons.cube_box,),
             onPressed: () {
 
           if(userId == "0"){
@@ -256,6 +257,18 @@ class _LandingPageState extends State<LandingPage> {
           setState(() {
             currentTab = 3;
           });
+        }),
+        IconButton(icon: Icon(currentTab == 4 ? CupertinoIcons.person_fill : CupertinoIcons.person,),
+            onPressed: () {
+
+              if(userId == "0"){
+                openLoginPage();
+                return;
+              }
+              if(!mounted) return;
+              setState(() {
+                currentTab = 4;
+              });
         }),
       ],
     );

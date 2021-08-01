@@ -410,8 +410,8 @@ class _SinglePostState extends State<SinglePost> {
                           icon: Icon(
                               feed['favorite'] == 'true'
                                   ? CupertinoIcons
-                                  .bookmark_fill
-                                  : CupertinoIcons.bookmark,
+                                  .heart
+                                  : CupertinoIcons.heart_fill,
                               color: Colors.black
                           ),
                           onPressed: (){

@@ -445,7 +445,6 @@ class _SearchPageState extends State<SearchPage> {
         language: "en",
         components: [new Component(Component.country, "gh")]);
     displayPrediction(p);
-
   }
 
   Future<Null> displayPrediction(Prediction p) async {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:astarte/pages/myReviews.dart';
@@ -6,10 +7,10 @@ import 'package:astarte/pages/viewImage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_google_maps/flutter_google_maps.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import 'package:share/share.dart';
@@ -33,8 +34,9 @@ class _FashionDesignerProfileState extends State<FashionDesignerProfile>  with S
   Config appConfiguration = new Config();
   TabController controller;
   ScrollController _scrollController = new ScrollController();
-  GlobalKey<GoogleMapStateBase> _key = GlobalKey<GoogleMapStateBase>();
-
+  Completer<GoogleMapController> _controller = Completer();
+  CameraPosition kGooglePlex;
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
   var loading = true;
   var userDetails;
@@ -102,6 +104,21 @@ class _FashionDesignerProfileState extends State<FashionDesignerProfile>  with S
       setState(() {
         loading = false;
         userDetails = jsonDecode(response.body);
+      });
+
+      kGooglePlex = CameraPosition(
+        target: LatLng(double.parse(userDetails['userInfo']['lat']), double.parse(userDetails['userInfo']['lng'])),
+        zoom: 14.4746,
+      );
+      final MarkerId markerId = MarkerId("1");
+      final Marker marker = Marker(
+        markerId: markerId,
+        position: LatLng(double.parse(userDetails['userInfo']['lat']), double.parse(userDetails['userInfo']['lng'])),
+      );
+
+      setState(() {
+        // adding a new marker to map
+        markers[markerId] = marker;
       });
     }catch(e){
       setState(() {
@@ -358,25 +375,19 @@ class _FashionDesignerProfileState extends State<FashionDesignerProfile>  with S
               Container(
                 height: 240,
                 child: GoogleMap(
-                  key: _key,
-                  initialZoom: 15,
-                    markers: {
-                      Marker(
-                        GeoCoord(double.parse(userDetails['userInfo']['lat']), double.parse(userDetails['userInfo']['lng'])),
-                          // icon: "assets/images/welcome.jpg"
-                      ),
-                    },
-                  initialPosition:GeoCoord(double.parse(userDetails['userInfo']['lat']), double.parse(userDetails['userInfo']['lng'])),
-                  mapType: MapType.roadmap,
-                  mobilePreferences: MobileMapPreferences(
-                      myLocationEnabled: false,
-                      myLocationButtonEnabled: false,
-                      rotateGesturesEnabled: false,
-                      scrollGesturesEnabled: false,
-                      zoomGesturesEnabled: false,
-                      tiltGesturesEnabled: false,
-                      zoomControlsEnabled: false
-                  ),
+                  markers: Set<Marker>.of(markers.values),
+                  mapType: MapType.normal,
+                  myLocationEnabled: false,
+                  myLocationButtonEnabled: false,
+                  rotateGesturesEnabled: false,
+                  scrollGesturesEnabled: false,
+                  zoomGesturesEnabled: false,
+                  tiltGesturesEnabled: false,
+                  zoomControlsEnabled: false,
+                  initialCameraPosition: kGooglePlex,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
                 ),
               ),
               Container(

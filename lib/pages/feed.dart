@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:astarte/pages/fashionDesignerProfile.dart';
 import 'package:astarte/pages/savedPost.dart';
-import 'package:astarte/pages/sendReview.dart';
 import 'package:astarte/pages/viewImage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,8 +18,6 @@ import 'package:snack/snack.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../config.dart';
 import 'login.dart';
-
-// import 'package:http/http.dart' as http;
 
 void main() {
   runApp(Feed());
@@ -577,9 +574,8 @@ class _FeedState extends State<Feed> {
                                               ),
                                             ),
                                             imageUrl: appConfiguration.apiBaseUrl+''+jsonDecode(feeds[index]['images'])[i],
-                                            placeholder: (context, url) => SpinKitWave(
-                                              color: Colors.blue,
-                                              size: 20.0,
+                                            placeholder: (context, url) => Container(
+                                              color: Colors.black12,
                                             ),
                                             errorWidget: (context, url, error) => Icon(Icons.error),
                                           ),
@@ -712,7 +708,7 @@ class _FeedState extends State<Feed> {
                     fontFamily: "Lato_Regular",
                     fontSize: 20,
                     color: Colors.black45)),
-            RaisedButton(
+            CupertinoButton(
                 onPressed: () {
                   if (!mounted) return;
                   setState(() {

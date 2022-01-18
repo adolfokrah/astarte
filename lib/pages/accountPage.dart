@@ -143,7 +143,7 @@ class _AccountPageState extends State<AccountPage> {
   Future fetchUserDetails()async{
     try{
       var url = appConfiguration.apiBaseUrl + 'getUserDetails.php';
-      var response = await http.post(url, body: {
+      var response = await http.post(Uri.parse(url), body: {
         'id': userId.toString(),
       });
 

@@ -74,7 +74,7 @@ class _FeedState extends State<Feed> {
 
     var url = appConfiguration.apiBaseUrl + 'fetch_new_feed.php';
 
-    var response = await http.post(url, body: dataM);
+    var response = await http.post(Uri.parse(url), body: dataM);
 
 
     var data = jsonDecode(response.body);
@@ -231,7 +231,7 @@ class _FeedState extends State<Feed> {
       });
 
       var url = appConfiguration.apiBaseUrl + 'toggleLike.php';
-      var response = await http.post(url, body: {
+      var response = await http.post(Uri.parse(url), body: {
         'userId': userId.toString(),
         'feedId': feedId
       });
@@ -271,7 +271,7 @@ class _FeedState extends State<Feed> {
       });
 
       var url = appConfiguration.apiBaseUrl + 'togglefavorites.php';
-      var response = await http.post(url, body: {
+      var response = await http.post(Uri.parse(url), body: {
         'userId': userId.toString(),
         'feedId': feedId
       });
@@ -301,7 +301,7 @@ class _FeedState extends State<Feed> {
 
 
       var url = appConfiguration.apiBaseUrl + 'togglePostNotification.php';
-      var response = await http.post(url, body: {
+      var response = await http.post(Uri.parse(url), body: {
         'subscriber': userId.toString(),
         'posted_by': postedBy
       });

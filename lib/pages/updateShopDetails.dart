@@ -6,7 +6,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,7 +15,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
 import '../config.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main(){
   runApp(UpdateShopDetails());
 }
@@ -35,7 +35,7 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
   TextEditingController aboutShop = TextEditingController();
   TextEditingController address = TextEditingController();
   TextEditingController services = TextEditingController();
-  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: "AIzaSyD4czYQp29KuCZNz298Bk-WOa8UrEWo7Wc");
+  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: dotenv.env['MAPS_API_KEY']);
 
   var shopLat=0.0;
   var shopLng = 0.0;
@@ -99,7 +99,7 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
 
 
         var url = appConfiguration.apiBaseUrl + 'updateUserProfile.php';
-        var response = await http.post(url, body:data);
+        var response = await http.post(Uri.parse(url), body:data);
 
         Navigator.of(context,rootNavigator: true).pop();
 
@@ -167,15 +167,20 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
     }
 
     var position =  await Geolocator.getCurrentPosition();
-    final coordinates = new Coordinates(position.latitude, position.longitude);
-    var addresses = await Geocoder.google(appConfiguration.googleMapsApiKey).findAddressesFromCoordinates(coordinates);
-
-    var first = addresses.first;
+    List<Placemark> newPlace = await placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark placeMark  = newPlace[0];
+    String name = placeMark.name;
+    String subLocality = placeMark.subLocality;
+    String locality = placeMark.locality;
+    String administrativeArea = placeMark.administrativeArea;
+    String postalCode = placeMark.postalCode;
+    String country = placeMark.country;
+    var first = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
 
     setState(() {
       shopLat = position.latitude;
       shopLng = position.longitude;
-      address.text = first.addressLine;
+      address.text = first;
     });
     // searchFashionDesinger(position.latitude,position.longitude,start);
   }
@@ -321,6 +326,8 @@ class _UpdateShopDetailsState extends State<UpdateShopDetails> {
         apiKey: appConfiguration.googleMapsApiKey,
         mode: Mode.overlay, // Mode.fullscreen
         language: "en",
+         types: ["address"],
+        strictbounds:false,
         components: [new Component(Component.country, "gh")]);
     displayPrediction(p);
 

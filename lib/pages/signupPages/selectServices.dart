@@ -48,7 +48,7 @@ class _SelectServicesState extends State<SelectServices> {
       loading = true;
     });
     var url = appConfiguration.apiBaseUrl + 'getServices.php';
-    var response = await http.get(url);
+    var response = await http.get(Uri.parse(url));
     if(!mounted) return;
     setState(() {
       allServices = jsonDecode(response.body)['styles'];

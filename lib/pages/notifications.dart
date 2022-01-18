@@ -75,7 +75,7 @@ class _NotificationsState extends State<Notifications> {
 
 
       var url = appConfiguration.apiBaseUrl + 'togglePostNotification.php';
-      var response = await http.post(url, body: {
+      var response = await http.post(Uri.parse(url), body: {
         'subscriber': userId.toString(),
         'posted_by': postedBy
       });
@@ -134,7 +134,7 @@ class _NotificationsState extends State<Notifications> {
       );
 
       var url = appConfiguration.apiBaseUrl + 'deleteNotification.php';
-      var response = await http.post(url, body: {
+      var response = await http.post(Uri.parse(url), body: {
         'notification_id': notificationId.toString(),
       });
 
@@ -176,7 +176,7 @@ class _NotificationsState extends State<Notifications> {
 
 
       var url = appConfiguration.apiBaseUrl + 'fetchNotificatons.php';
-      var response = await http.post(url, body: {
+      var response = await http.post(Uri.parse(url), body: {
         'userId': userId.toString(),
         'start': mstart.toString(),
         'order': order

@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../config.dart';
 
 void main(){
@@ -31,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController _userSearchQuery = TextEditingController();
   TextEditingController _userSearchLocation = TextEditingController();
   Config appConfiguration = new Config();
-  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: "AIzaSyD4czYQp29KuCZNz298Bk-WOa8UrEWo7Wc");
+  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: dotenv.env['MAPS_API_KEY']);
   ScrollController controller;
   var searchLat;
   var searchLng;
@@ -72,15 +72,22 @@ class _SearchPageState extends State<SearchPage> {
     }
 
     var position =  await Geolocator.getCurrentPosition();
-    final coordinates = new Coordinates(position.latitude, position.longitude);
-    var addresses = await Geocoder.google(appConfiguration.googleMapsApiKey).findAddressesFromCoordinates(coordinates);
+    List<Placemark> newPlace = await placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark placeMark  = newPlace[0];
+    String name = placeMark.name;
+    String subLocality = placeMark.subLocality;
+    String locality = placeMark.locality;
+    String administrativeArea = placeMark.administrativeArea;
+    String postalCode = placeMark.postalCode;
+    String country = placeMark.country;
+    var first = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
 
-    var first = addresses.first;
+    // var first = addresses.first;
     if(mounted){
       setState(() {
         searchLat = position.latitude;
         searchLng = position.longitude;
-        _locationName = first.addressLine;
+        _locationName = first;
       });
       searchFashionDesinger(position.latitude,position.longitude,start);
     }
@@ -156,7 +163,7 @@ class _SearchPageState extends State<SearchPage> {
 
 
       var url = appConfiguration.apiBaseUrl + 'searchFashionDesigner.php';
-      var response = await http.post(url, body: body);
+      var response = await http.post(Uri.parse(url), body: body);
 
 
       var data = jsonDecode(response.body);
@@ -441,14 +448,17 @@ class _SearchPageState extends State<SearchPage> {
     Prediction p = await PlacesAutocomplete.show(
         context: context,
         apiKey: appConfiguration.googleMapsApiKey,
-        mode: Mode.overlay, // Mode.fullscreen
+        mode: Mode.overlay,
         language: "en",
+        strictbounds:false,
+        types: ["address"],
         components: [new Component(Component.country, "gh")]);
     displayPrediction(p);
   }
 
   Future<Null> displayPrediction(Prediction p) async {
     if (p != null) {
+      print(jsonEncode(p));
       // get detail (lat/lng)
       PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
       final lat = detail.result.geometry.location.lat;

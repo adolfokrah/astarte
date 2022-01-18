@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:page_transition/page_transition.dart';
@@ -69,7 +69,7 @@ class _CreatePostState extends State<CreatePost> {
 
       var url = appConfiguration.apiBaseUrl + 'createPost.php';
 
-      List<MultipartFile> multipartImageList = new List<MultipartFile>();
+      List<MultipartFile> multipartImageList = <MultipartFile>[];
       for (Asset asset in widget.images) {
         ByteData byteData = await asset.getByteData();
         List<int> imageData = byteData.buffer.asUint8List();
@@ -81,17 +81,20 @@ class _CreatePostState extends State<CreatePost> {
         multipartImageList.add(multipartFile);
       }
 
+
       SharedPreferences storage = await SharedPreferences.getInstance();
       String userDetails = storage.getString('userDetails');
       var userId = jsonDecode(userDetails)['user_id'];
 
+
       FormData formData = FormData.fromMap({
-        "multipartFiles": multipartImageList,
+        "multipartFiles[]": multipartImageList,
         "description": caption.text,
         'feed_id': 0,
         'posted_by': userId.toString(),
         'status':'published'
       });
+
 
       Dio dio = new Dio();
       var response = await dio.post(url, data: formData);

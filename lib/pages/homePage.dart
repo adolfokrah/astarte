@@ -8,7 +8,8 @@ import 'package:astarte/pages/login.dart';
 import 'package:astarte/pages/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:multi_image_picker2/multi_image_picker2.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -17,9 +18,7 @@ import 'blockedPage.dart';
 import 'delivery.dart';
 import 'notifications.dart';
 
-// void main() {
-//   runApp(LandingPage());
-// }
+
 
 class LandingPage extends StatefulWidget {
   @override
@@ -48,7 +47,7 @@ class _LandingPageState extends State<LandingPage> {
     try{
      if(userId == "0") return;
       var url = appConfiguration.apiBaseUrl + 'getUserDetails.php';
-      var response = await http.post(url, body: {
+      var response = await http.post(Uri.parse(url), body: {
         'id': userId.toString(),
       });
 
@@ -71,10 +70,11 @@ class _LandingPageState extends State<LandingPage> {
 
 
   Future<void> loadAssets() async {
-    List<Asset> resultList = List<Asset>();
+    List<Asset> resultList = <Asset>[];
     String error = 'No Error Dectected';
 
     try {
+
       resultList = await MultiImagePicker.pickImages(
         maxImages: 4,
         enableCamera: true,

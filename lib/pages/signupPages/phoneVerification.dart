@@ -88,8 +88,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
       var message = 'Your verification code: '+code.toString();
       var url = "https://apps.mnotify.net/smsapi?key="+appConfiguration.smsApiKey+"&to="+widget.userInfo['mobile_number']+"&msg="+message+"&sender_id="+appConfiguration.senderId;
 
-      print(code);
-      var response = await http.get(url);
+      await http.get(Uri.parse(url));
 
 
     }catch(e){
@@ -226,7 +225,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
         });
 
         var url = appConfiguration.apiBaseUrl + 'registerUser.php';
-        // var response = await http.post(url, body: widget.userInfo);
+        // var response = await http.post(Uri.parse(url), body: widget.userInfo);
 
         var request = http.MultipartRequest('POST', Uri.parse(url));
         request.files.add(await http.MultipartFile.fromPath('photo',widget.userInfo['photoPath']));

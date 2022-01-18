@@ -31,6 +31,7 @@ class _UpdateSocialMediaLinksState extends State<UpdateSocialMediaLinks> {
   TextEditingController facebook = TextEditingController();
   TextEditingController twitter = TextEditingController();
   TextEditingController instagram = TextEditingController();
+  TextEditingController whatsapp = TextEditingController();
   var loading = true;
   var failed = false;
   var socialMediaLinks;
@@ -53,7 +54,7 @@ class _UpdateSocialMediaLinksState extends State<UpdateSocialMediaLinks> {
         'user_id': widget.userDetails['user_id'].toString()
       };
 
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
       var socialMediaLinks = jsonDecode(response.body);
 
       for(var i=0; i<socialMediaLinks.length; i++){
@@ -63,8 +64,10 @@ class _UpdateSocialMediaLinksState extends State<UpdateSocialMediaLinks> {
           twitter.text = socialMediaLinks[i]['link'];
         }else if (socialMediaLinks[i]['site_name'] == 'Instagram'){
           instagram.text = socialMediaLinks[i]['link'];
-        }else{
+        }else if(socialMediaLinks[i]['site_name'] == 'Facebook'){
           facebook.text = socialMediaLinks[i]['link'];
+        }else{
+          whatsapp.text = socialMediaLinks[i]['link'];
         }
       }
 
@@ -118,6 +121,9 @@ class _UpdateSocialMediaLinksState extends State<UpdateSocialMediaLinks> {
           },{
             'siteName': 'Instagram',
             'link': instagram.text
+          },{
+            'siteName': 'Whatsapp',
+            'link': whatsapp.text
           }
         ];
         var data = {
@@ -127,14 +133,13 @@ class _UpdateSocialMediaLinksState extends State<UpdateSocialMediaLinks> {
 
 
         var url = appConfiguration.apiBaseUrl + 'updateSocialMediaLinks.php';
-        var response = await http.post(url, body:data);
-        print(response.body);
+        var response = await http.post(Uri.parse(url), body:data);
         Navigator.of(context,rootNavigator: true).pop();
 
 
 
         Fluttertoast.showToast(
-            msg: "Profile updated.",
+            msg: "Social media links updated.",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -144,7 +149,6 @@ class _UpdateSocialMediaLinksState extends State<UpdateSocialMediaLinks> {
         );
       }
     }catch(e){
-      print(e);
       Navigator.of(context,rootNavigator: true).pop();
       Fluttertoast.showToast(
           msg: "Connection failed.",
@@ -288,6 +292,25 @@ class _UpdateSocialMediaLinksState extends State<UpdateSocialMediaLinks> {
                       child: FaIcon(FontAwesomeIcons.instagram,color: Colors.black45,size: 20,),
                     ),
                     labelText: "Instagram"
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, top: 20, right: 20),
+              child: TextFormField(
+                validator: (value){
+                  if(value.length < 10  || value[0] != "+"){
+                    return 'Please enter a valid number eg. +23324530231';
+                  }
+                  return null;
+                },
+                controller: whatsapp,
+                decoration: InputDecoration(
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.only(left: 0,right:0, top: 15),
+                      child: FaIcon(FontAwesomeIcons.whatsapp,color: Colors.black45,size: 20,),
+                    ),
+                    labelText: "Whatsapp Number"
                 ),
               ),
             )

@@ -78,7 +78,7 @@ class _EditProfileState extends State<EditProfile> {
       );
 
       var url = appConfiguration.apiBaseUrl + 'updateUserProfile.php';
-      // var response = await http.post(url, body:data);
+      // var response = await http.post(Uri.parse(url), body:data);
 
 
       Map<String, String> myMap = new Map<String, String>.from(data);

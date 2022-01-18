@@ -6,7 +6,7 @@ class Config {
   Color navItemColor = Color(0xff5a5a5a);
   String appSplashLogo = "assets/images/logo.png";
   String apiBaseUrl = 'https://astarte.biztrustgh.com/';
-  String googleMapsApiKey = "AIzaSyD4czYQp29KuCZNz298Bk-WOa8UrEWo7Wc";
+  String googleMapsApiKey = "AIzaSyBHhoI-E5yAjALXcumEvJntunYysQFJTHc";
   String smsApiKey = "cqu3qdZYrP5mkRvsaKFdKNBJ2";
   String senderId = 'perple';
 }

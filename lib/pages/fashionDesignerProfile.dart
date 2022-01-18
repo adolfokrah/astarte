@@ -98,7 +98,7 @@ class _FashionDesignerProfileState extends State<FashionDesignerProfile>  with S
         'user_id': widget.userId.toString()
       };
 
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
 
       if(!mounted) return;
       setState(() {
@@ -555,12 +555,14 @@ class _FashionDesignerProfileState extends State<FashionDesignerProfile>  with S
     List <Widget> list = List<Widget>();
 
     for(var i=0; i<userDetails['socialMediaLinks'].length; i++){
-      var icon  = FontAwesomeIcons.facebook;
+      var icon  = FontAwesomeIcons.whatsapp;
       if(userDetails['socialMediaLinks'][i]['link'] != ''){
         if(userDetails['socialMediaLinks'][i]['site_name'] == 'Twitter'){
           icon  = FontAwesomeIcons.twitter;
         }else if (userDetails['socialMediaLinks'][i]['site_name'] == 'Instagram'){
           icon  = FontAwesomeIcons.instagram;
+        }else if (userDetails['socialMediaLinks'][i]['site_name'] == 'Facebook'){
+          icon  = FontAwesomeIcons.facebook;
         }
 
 
@@ -570,10 +572,14 @@ class _FashionDesignerProfileState extends State<FashionDesignerProfile>  with S
               IconButton(
                 onPressed: ()async{
                   String googleUrl = userDetails['socialMediaLinks'][i]['link'];
-                  if (await canLaunch(googleUrl)) {
-                  await launch(googleUrl);
-                  } else {
 
+                  if (userDetails['socialMediaLinks'][i]['site_name'] == 'Whatsapp'){
+                    googleUrl = "https://api.whatsapp.com/send/?phone=${userDetails['socialMediaLinks'][i]['link']}&text&app_absent=0";
+                  }
+
+                  if (await canLaunch(googleUrl)) {
+                    await launch(googleUrl);
+                  } else {
                   throw 'Could not launch $googleUrl';
                   }
                 },

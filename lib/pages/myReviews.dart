@@ -51,7 +51,7 @@ class _MyReviewsState extends State<MyReviews> {
       var data = {
         'user_id': widget.userId.toString()
       };
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
       if(!mounted) return;
       setState(() {
         loading = false;

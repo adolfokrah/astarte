@@ -44,7 +44,7 @@ class _PremiumServicesState extends State<PremiumServices> {
 
       var url = appConfiguration.apiBaseUrl + 'getPackages.php';
 
-      var response = await http.get(url);
+      var response = await http.get(Uri.parse(url));
 
       if(!mounted) return;
       setState(() {

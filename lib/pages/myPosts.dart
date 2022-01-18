@@ -61,7 +61,7 @@ class _MyPostsState extends State<MyPosts> {
         'start': start.toString()
       };
 
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
       
       var newPosts = jsonDecode(response.body);
 
@@ -180,7 +180,7 @@ class _MyPostsState extends State<MyPosts> {
         'posts': jsonEncode(selectedPosts).replaceAll("[", "(").replaceAll("]", ")")
       };
 
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
       Navigator.of(context,rootNavigator: true).pop();
       var newPosts = posts;
       var nSelectedPosts = selectedPosts;

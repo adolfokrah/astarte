@@ -61,7 +61,7 @@ class _LoginState extends State<Login> {
             };
 
             var url = appConfiguration.apiBaseUrl + 'login.php';
-            var response = await http.post(url, body: data);
+            var response = await http.post(Uri.parse(url), body: data);
 
             Navigator.of(context,rootNavigator: true).pop();
 
@@ -234,46 +234,6 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(child: Divider(thickness: 1.5,)),
-                                SizedBox(
-                                  width: 40,
-                                  child: Center(child: Text("OR",style: TextStyle(color:Colors.black38),),),
-                                ),
-                                Flexible(child: Divider(thickness: 1.5,))
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 20),
-                              child: FlatButton(onPressed: (){},
-                                  child: Row(
-                                    children: [
-                                      Padding(padding: EdgeInsets.only(right: 20),
-                                      child: FaIcon(FontAwesomeIcons.facebook,color: Colors.white,),),
-                                      Text("Login with Facebook",style: TextStyle(color: Colors.white,fontFamily: "Lato_Bold"),)
-                                    ],
-                                  ),color: Colors.blueAccent,minWidth: double.infinity,height: 50,shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      side: BorderSide(color: Colors.blueAccent)
-                                  )),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 20),
-                              child: FlatButton(onPressed: (){},
-                                  child: Row(
-                                    children: [
-                                      Padding(padding: EdgeInsets.only(right: 20),
-                                        child: FaIcon(FontAwesomeIcons.google,color: Colors.white,),),
-                                      Text("Login with Google",style: TextStyle(color: Colors.white,fontFamily: "Lato_Bold"),)
-                                    ],
-                                  ),color: Colors.redAccent,minWidth: double.infinity,height: 50,shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      side: BorderSide(color: Colors.redAccent)
-                                  )),
-                            )
-
                           ],
                         ),
                       )

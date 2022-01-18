@@ -59,7 +59,7 @@ class _SavedPostState extends State<SavedPost> {
         'start': start.toString()
       };
 
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
       var newPosts = jsonDecode(response.body);
 
       for(var i=0; i<newPosts.length; i++){
@@ -170,7 +170,7 @@ class _SavedPostState extends State<SavedPost> {
         'posts': jsonEncode(selectedPosts).replaceAll("[", "(").replaceAll("]", ")")
       };
 
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
       Navigator.of(context,rootNavigator: true).pop();
       var newPosts = posts;
       var nSelectedPosts = selectedPosts;

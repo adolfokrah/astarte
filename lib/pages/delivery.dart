@@ -83,7 +83,7 @@ class _DeliveryState extends State<Delivery> {
         "status":status
       };
       var url = appConfiguration.apiBaseUrl + 'fetch_user_orders.php';
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
       if(mounted)
         setState(() {
           failed = false;

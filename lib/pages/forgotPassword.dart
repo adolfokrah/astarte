@@ -52,7 +52,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         };
 
         var url = appConfiguration.apiBaseUrl + 'ForgotPassword.php';
-        var response = await http.post(url, body: data);
+        var response = await http.post(Uri.parse(url), body: data);
 
         Navigator.of(context,rootNavigator: true).pop();
 

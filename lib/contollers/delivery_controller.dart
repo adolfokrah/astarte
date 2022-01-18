@@ -65,7 +65,7 @@ class DeliveryController extends GetxController{
           "status":status
         };
         var url = appConfiguration.apiBaseUrl + 'fetch_user_orders.php';
-        var response = await http.post(url, body: data);
+        var response = await http.post(Uri.parse(url), body: data);
 
 
         failed.value = false;
@@ -92,7 +92,7 @@ class DeliveryController extends GetxController{
         "order_id": orderId,
       };
       var url = appConfiguration.apiBaseUrl + 'fetch_order.php';
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
       order.value = jsonDecode(response.body);
       failedFetchingOrder.value = false;
     }catch(e){

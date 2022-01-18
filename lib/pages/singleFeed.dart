@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:transparent_image/transparent_image.dart';
 import 'package:snack/snack.dart';
 import '../config.dart';
 import 'fashionDesignerProfile.dart';
@@ -92,7 +91,7 @@ class _SinglePostState extends State<SinglePost> {
       });
 
       var url = appConfiguration.apiBaseUrl + 'toggleLike.php';
-      var response = await http.post(url, body: {
+      var response = await http.post(Uri.parse(url), body: {
         'userId': userId.toString(),
         'feedId': feedId
       });
@@ -128,7 +127,7 @@ class _SinglePostState extends State<SinglePost> {
       });
 
       var url = appConfiguration.apiBaseUrl + 'togglefavorites.php';
-      var response = await http.post(url, body: {
+      var response = await http.post(Uri.parse(url), body: {
         'userId': userId.toString(),
         'feedId': feedId
       });
@@ -171,7 +170,7 @@ class _SinglePostState extends State<SinglePost> {
       var data = {
         'feed_id': widget.feedId.toString()
       };
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
       Navigator.of(context,rootNavigator: true).pop();
       Navigator.pop(context);
       Fluttertoast.showToast(
@@ -202,7 +201,7 @@ class _SinglePostState extends State<SinglePost> {
         'user_id': userId.toString()
       };
 
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
 
       var newFeed = jsonDecode(response.body);
       if(newFeed[0]['feed_id'] == null){

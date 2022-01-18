@@ -68,7 +68,7 @@ class _ChangePasswordState extends State<ChangePassword> {
         data['password'] = md5.convert(utf8.encode(newPassword.text)).toString();
         data['photoPath'] = '';
         var url = appConfiguration.apiBaseUrl + 'updateUserProfile.php';
-        var response = await http.post(url, body:data);
+        var response = await http.post(Uri.parse(url), body:data);
 
         Navigator.of(context,rootNavigator: true).pop();
 

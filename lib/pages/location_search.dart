@@ -1,14 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../config.dart';
 
@@ -20,7 +19,7 @@ class LocationSearch extends StatefulWidget {
 }
 
 class _LocationSearchState extends State<LocationSearch> {
-  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: "AIzaSyD4czYQp29KuCZNz298Bk-WOa8UrEWo7Wc");
+  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: dotenv.env['MAPS_API_KEY']);
   Config appConfiguration = new Config();
   var lat,lng,address;
   var loading = true;
@@ -62,15 +61,22 @@ class _LocationSearchState extends State<LocationSearch> {
     }
 
     var position =  await Geolocator.getCurrentPosition();
-    final coordinates = new Coordinates(position.latitude, position.longitude);
-    var addresses = await Geocoder.google(appConfiguration.googleMapsApiKey).findAddressesFromCoordinates(coordinates);
+    // final coordinates = new Coordinates(position.latitude, position.longitude);
+    List<Placemark> newPlace = await placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark placeMark  = newPlace[0];
+    String name = placeMark.name;
+    String subLocality = placeMark.subLocality;
+    String locality = placeMark.locality;
+    String administrativeArea = placeMark.administrativeArea;
+    String postalCode = placeMark.postalCode;
+    String country = placeMark.country;
+    var first = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
 
-    var first = addresses.first;
     if(mounted){
       setState(() {
         lat = position.latitude;
         lng = position.longitude;
-        address = first.addressLine;
+        address = first;
         loading = false;
       });
       kGooglePlex = CameraPosition(
@@ -81,16 +87,20 @@ class _LocationSearchState extends State<LocationSearch> {
   }
 
   Future<void> _handlePressButton() async {
-    Prediction p = await PlacesAutocomplete.show(
+        Prediction p = await PlacesAutocomplete.show(
         context: context,
         apiKey: appConfiguration.googleMapsApiKey,
-        mode: Mode.overlay, // Mode.fullscreen
+        mode: Mode.fullscreen, // Mode.fullscreen
         language: "en",
+         types: ["address"],
+            strictbounds:false,
         components: [new Component(Component.country, "gh")]);
-    displayPrediction(p);
+
+        displayPrediction(p);
   }
 
   Future<Null> displayPrediction(Prediction p) async {
+
     if (p != null) {
       // get detail (lat/lng)
       if(!mounted) return;
@@ -126,17 +136,27 @@ class _LocationSearchState extends State<LocationSearch> {
       (visibleRegion.northeast.longitude + visibleRegion.southwest.longitude) / 2,
     );
 
-    final coordinates = new Coordinates(centerLatLng.latitude, centerLatLng.longitude);
-    var addresses = await Geocoder.google(appConfiguration.googleMapsApiKey).findAddressesFromCoordinates(coordinates);
+    // final coordinates = new Coordinates(centerLatLng.latitude, centerLatLng.longitude);
+    // var addresses = await Geocoder.google(appConfiguration.googleMapsApiKey).findAddressesFromCoordinates(coordinates);
+    //
+    // var first = addresses.first;
 
-    var first = addresses.first;
+    List<Placemark> newPlace = await placemarkFromCoordinates(centerLatLng.latitude, centerLatLng.longitude);
+    Placemark placeMark  = newPlace[0];
+    String name = placeMark.name;
+    String subLocality = placeMark.subLocality;
+    String locality = placeMark.locality;
+    String administrativeArea = placeMark.administrativeArea;
+    String postalCode = placeMark.postalCode;
+    String country = placeMark.country;
+    var first = "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
 
     if(mounted) {
       setState(() {
         loading = false;
         lat = centerLatLng.latitude;
         lng = centerLatLng.longitude;
-        address = first.addressLine;
+        address = first;
       });
     }
   }

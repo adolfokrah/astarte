@@ -90,7 +90,7 @@ class _SendReviewsState extends State<SendReviews> {
       var data = {
         'user_id': widget.userId.toString()
       };
-      var response = await http.post(url, body: data);
+      var response = await http.post(Uri.parse(url), body: data);
 
       if(!mounted) return;
       setState(() {
